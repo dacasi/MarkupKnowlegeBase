@@ -4,6 +4,20 @@
              xmlns:local="clr-namespace:MarkupKnowlegeBase"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <Style TargetType="Control">
+            <Setter Property="Background" Value ="#1C2329"/>
+            <Setter Property="Foreground" Value ="#adb7bd"/>
+        </Style>
+        <Style TargetType="TreeView">
+            <Setter Property="Background" Value ="#1C2329"/>
+            <Setter Property="Foreground" Value ="#adb7bd"/>
+        </Style>
+        <Style TargetType="TextBox">
+            <Setter Property="Background" Value ="#1C2329"/>
+            <Setter Property="Foreground" Value ="#adb7bd"/>
+        </Style>
+        <Style TargetType="Label">
+            <Setter Property="Foreground" Value ="#adb7bd"/>
+        </Style>
     </Application.Resources>
 </Application>

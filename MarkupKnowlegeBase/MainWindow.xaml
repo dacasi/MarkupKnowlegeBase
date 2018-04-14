@@ -5,8 +5,19 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MarkupKnowlegeBase"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Knowlegebase" Height="450" Width="800" Background="#1C2329" Foreground="#adb7bd" Loaded="Window_Loaded">
     <Grid>
-        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="44"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <WebBrowser Name="webBrowser" Grid.Column="1" Grid.Row="1" Margin="10,10,10.333,9.667"/>
+        <TreeView Name="tvwEntries" Grid.Column="0" Grid.Row="1" Margin="10,10,10,9.667"/>
+        <TextBox Height="23" Margin="68,10,10,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
+        <Label Content="Suche:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
     </Grid>
 </Window>

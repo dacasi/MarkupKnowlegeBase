@@ -10,7 +10,7 @@ using System.Windows;
 [assembly: AssemblyTitle("MarkupKnowlegeBase")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Casagranda Michael")]
 [assembly: AssemblyProduct("MarkupKnowlegeBase")]
 [assembly: AssemblyCopyright("Copyright ©  2018")]
 [assembly: AssemblyTrademark("")]

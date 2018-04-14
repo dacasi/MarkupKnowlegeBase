@@ -2,6 +2,9 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>Markdown.Core</AssemblyName>
+    <RootNamespace>Markdown.Core</RootNamespace>
+    <Authors>Michael Casagranda</Authors>
   </PropertyGroup>
 
 </Project>

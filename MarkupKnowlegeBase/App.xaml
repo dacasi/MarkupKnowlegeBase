@@ -19,5 +19,8 @@
         <Style TargetType="Label">
             <Setter Property="Foreground" Value ="#adb7bd"/>
         </Style>
+        <Style TargetType="TreeViewItem">
+            <Setter Property="Foreground" Value ="#adb7bd"/>
+        </Style>
     </Application.Resources>
 </Application>

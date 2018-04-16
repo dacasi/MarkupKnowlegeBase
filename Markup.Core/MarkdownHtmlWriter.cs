@@ -60,7 +60,9 @@ namespace Markdown.Core
             _writer.WriteAttributeString("charset", "utf-8");
             _writer.WriteEndElement();
 
-            _writer.WriteElementString("title", _settings.Title);
+            if(!string.IsNullOrWhiteSpace(_settings.Title))
+                _writer.WriteElementString("title", _settings.Title);
+
             _writer.WriteStartElement("style");
             _writer.WriteRaw(GenerateCSS());
             _writer.WriteEndElement();

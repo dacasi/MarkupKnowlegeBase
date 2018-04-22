@@ -96,6 +96,7 @@ namespace Markdown.Core
             builder.AppendLine("body { color: #adb7bd; font-family: 'Lucida Sans', Arial, sans-serif; font-size: 16px; background-color: #1C2329; }");
             builder.AppendLine("h1 { color: #ffffff; font-family: 'Lato', sans-serif; font-size: 32px; font-weight: 300; line-height: 58px; margin: 0 0 16px; border-bottom: solid 1px #adb7bd }");
             builder.AppendLine("h2 { color: #ffffff; font-family: 'Lato', sans-serif; font-size:28px; font-weight: 300; line-height: 58px; margin: 0 0 14px; }");
+            builder.AppendLine("h3 { color: #ffffff; font-family: 'Lato', sans-serif; font-size:24px; font-weight: 300; line-height: 58px; margin: 0 0 12px; }");
             builder.AppendLine("p { color: #adb7bd; font-family: 'Lucida Sans', Arial, sans-serif; font-size: 16px; line-height: 26px; margin-top: 0; margin-bottom: 0; margin-right: 0; margin-left: 10px }");
             builder.AppendLine("a { color: #fe921f; text-decoration: underline; }");
             builder.AppendLine("a:hover { color: #ffffff }");

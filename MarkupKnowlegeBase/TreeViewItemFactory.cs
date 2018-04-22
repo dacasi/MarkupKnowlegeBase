@@ -9,9 +9,9 @@ namespace Markdown.UI
         private const string _folderImage = @"Resources/folder_48x48.png";
         private const string _markdownImage = @"Resources/filenew.png";
 
-        public TreeViewItem CreateFolder(string a_text, object a_tag, Action<TreeViewItem> a_expandAction)
+        public TreeViewItem CreateFolder(string a_text, object a_tag, Action<TreeViewItem> a_expandAction, bool a_canExpand = true)
         {
-            return CreateMarkdownFile(a_text, _folderImage, a_tag, a_expandAction, true);
+            return CreateMarkdownFile(a_text, _folderImage, a_tag, a_expandAction, a_canExpand);
         }
 
         public TreeViewItem CreateMarkdownFile(string a_text, object a_tag, Action<TreeViewItem> a_expandAction)

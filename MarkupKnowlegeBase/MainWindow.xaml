@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MarkupKnowlegeBase"
         mc:Ignorable="d"
-        Title="Knowlegebase" Height="450" Width="800" Background="#1C2329" Foreground="#adb7bd" Loaded="Window_Loaded" Closing="Window_Closing">
+        Title="Knowlegebase" Height="450" Width="800" Background="#1C2329" Foreground="#adb7bd" Loaded="Window_Loaded" Closing="Window_Closing" Icon="if_Apple_Books_2697663.ico">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="300"/>
@@ -15,9 +15,40 @@
             <RowDefinition Height="44"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <WebBrowser Name="webBrowser" Grid.Column="1" Grid.Row="1" Margin="10,10,10.333,9.667" />
-        <TreeView Name="tvwEntries" Grid.Column="0" Grid.Row="1" Margin="10,10,10,9.667" SelectedItemChanged="tvwEntries_SelectedItemChanged"/>
+        <Rectangle Grid.Row="0" Fill="Black" Grid.ColumnSpan="2" />
+        <Grid Name="grdBrowserEditor" Grid.Column="1" Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition SharedSizeGroup="editorGroup" Height="0"/>
+                <RowDefinition SharedSizeGroup="editorGroup" Height="*"/>
+            </Grid.RowDefinitions>
+            <TextBox Grid.Row="0" Name="txtEditor" TextWrapping="Wrap" AcceptsReturn="true" AcceptsTab="True" BorderThickness="0 0 0 1"/>
+            <WebBrowser Grid.Row="1" Name="webBrowser"/>
+        </Grid>
+        <TreeView Name="tvwEntries" Grid.Column="0" Grid.Row="1" Margin="0,0,0,-0.333" SelectedItemChanged="tvwEntries_SelectedItemChanged" BorderThickness="0 0 1 0">
+            <TreeView.Resources>
+                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Black" />
+                <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="Black" />
+            </TreeView.Resources>
+        </TreeView>
         <TextBox Height="23" Margin="68,10,10,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
         <Label Content="Suche:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+
+        <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
+            <Button Background="Transparent" BorderThickness="0">
+                <Image Source="Resources/new.png"  Width="32" Height="32"/>
+            </Button>
+            <Button Background="Transparent" Margin="16, 0, 0, 0" Name="btnEdit" BorderThickness="0" Click="btnEdit_Click">
+                <Image Source="Resources/edit.png"  Width="32" Height="32"/>
+            </Button>
+            <Button Background="Transparent" Name="btnRefresh" BorderThickness="0" Click="btnRefresh_Click">
+                <Image Source="Resources/refresh.png"  Width="32" Height="32"/>
+            </Button>
+            <Button Background="Transparent" Name="btnSave" BorderThickness="0" Click="btnSave_Click">
+                <Image Source="Resources/save.png"  Width="32" Height="32"/>
+            </Button>
+            <Button Background="Transparent" BorderThickness="0" Margin="16, 0, 0, 0">
+                <Image Source="Resources/delete.png"  Width="32" Height="32"/>
+            </Button>
+        </StackPanel>
     </Grid>
 </Window>

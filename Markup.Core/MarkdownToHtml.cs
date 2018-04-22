@@ -61,13 +61,21 @@ namespace Markdown.Core
 
             a_line = PrepareLine(a_line);
 
-            if (trimLine.Any() && trimLine.All(c => c == '=')) {
+            if (trimLine.Any() && trimLine.All(c => c == '='))
+            {
                 AppendElement("h1", _buffer.ToString().Trim());
                 _buffer.Clear();
             }
-            else if (a_line.StartsWith("##"))
+            else if (a_line.StartsWith("#"))
             {
-                AppendElement("h2", a_line.TrimStart(new char[] { '#', ' ' }));
+                var tag = string.Empty;
+                if (a_line.StartsWith("###")) { tag = "h3"; }
+                else if (a_line.StartsWith("##")) { tag = "h2"; }
+                else if(a_line.StartsWith("#")) { tag = "h1"; }
+
+                if (!string.IsNullOrWhiteSpace(tag)) 
+                    AppendElement(tag, a_line.TrimStart(new char[] { '#', ' ' }));
+
             }
             else if (string.IsNullOrWhiteSpace(a_line))
             {
@@ -87,7 +95,8 @@ namespace Markdown.Core
                     _buffer.Clear();
                 }
             }
-            else if (trimLine.All(c => c == '-')) {
+            else if (trimLine.All(c => c == '-'))
+            {
                 AppendElement("hr");
             }
             else if (trimLine.StartsWith("*"))
@@ -106,7 +115,7 @@ namespace Markdown.Core
                     StartElement("ol");
                     _listActive = true;
                 }
-                _builder.AppendLine($"<li>{a_line.Substring(a_line.IndexOf('.')+1)}</li>");
+                _builder.AppendLine($"<li>{a_line.Substring(a_line.IndexOf('.') + 1)}</li>");
             }
             else
             {

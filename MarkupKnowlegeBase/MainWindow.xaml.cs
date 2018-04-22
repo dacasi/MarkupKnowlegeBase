@@ -25,10 +25,12 @@ namespace Markdown.UI
     public partial class MainWindow : Window
     {
         private static readonly string _configFile = "Config.json";
+        private static readonly string _welcomePage = @"Content\Welcome.markdown";
 
         private KBRepository _repository;
         private KBConfig _config;
         private readonly TreeViewItemFactory _treeViewFactory = new TreeViewItemFactory();
+        private bool _isEditorVisible = false;
 
         public MainWindow()
         {
@@ -42,6 +44,13 @@ namespace Markdown.UI
                 _repository = new KBRepository(_config.BaseDirectory);
             });
             ReloadTree();
+            LoadWelcomePage();
+        }
+
+        private void LoadWelcomePage()
+        {
+            if (File.Exists(_welcomePage))
+                LoadMarkdown(new FileInfo(_welcomePage));
         }
 
         private void ReloadTree()
@@ -69,17 +78,33 @@ namespace Markdown.UI
             if(item.Tag is FileInfo)
             {
                 var info = (FileInfo)item.Tag;
-                var settings = new MarkdownHtmlWriterSettings()
-                {
-                    Title = info.Name
-                };
-                using (var writer = new MarkdownHtmlWriter(settings))
-                {
-                    writer.AppendMarkdown(File.ReadAllText(info.FullName, Encoding.UTF8));
-                    var tempFile = CreateTempFile(writer.GetHtml());
-                    webBrowser.Navigate(tempFile);
-                }
+                LoadMarkdown(info);
             }
+        }
+
+        private void LoadMarkdown(FileInfo  a_info)
+        {
+            var settings = new MarkdownHtmlWriterSettings()
+            {
+                Title = a_info.Name
+            };
+            using (var writer = new MarkdownHtmlWriter(settings))
+            {
+                var text = File.ReadAllText(a_info.FullName, Encoding.UTF8);
+                txtEditor.Text = text;
+                writer.AppendMarkdown(text);
+                var tempFile = CreateTempFile(writer.GetHtml());
+                webBrowser.Navigate(tempFile);
+            }
+        }
+
+        private FileInfo GetSelectedFileInfo()
+        {
+            var obj = tvwEntries.SelectedItem;
+            if (!(obj is TreeViewItem)) return null;
+            var item = (TreeViewItem)obj;
+            if (item.Tag == null || !(item.Tag is FileInfo)) return null;
+            return (FileInfo)item.Tag;
         }
 
         private string CreateTempFile(string a_html)
@@ -97,7 +122,7 @@ namespace Markdown.UI
             foreach (var dir in Directory.GetDirectories(a_parent.FullName))
             {
                 var dirInfo = new DirectoryInfo(dir);
-                var node = _treeViewFactory.CreateFolder(dirInfo.Name, dirInfo, tvwEntries_Expand);
+                var node = _treeViewFactory.CreateFolder(dirInfo.Name, dirInfo, tvwEntries_Expand, dirInfo.GetDirectories().Any());
                 nodes.Add(node);
             }
             foreach (var file in Directory.GetFiles(a_parent.FullName, "*.markdown"))
@@ -134,5 +159,44 @@ namespace Markdown.UI
             catch { }
         }
 
+        private void btnEdit_Click(object sender, RoutedEventArgs e)
+        {
+            ToogleEditor();
+        }
+
+        private void ToogleEditor()
+        {
+            _isEditorVisible = !_isEditorVisible;
+            if (_isEditorVisible)
+                grdBrowserEditor.RowDefinitions[0].Height = new GridLength(1, GridUnitType.Star);
+            else
+                grdBrowserEditor.RowDefinitions[0].Height = new GridLength(0);
+        }
+
+        private void btnSave_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var info = GetSelectedFileInfo();
+                if (info == null) return;
+                File.WriteAllText(info.FullName, txtEditor.Text, Encoding.UTF8);
+            }
+            catch(Exception ex)
+            {
+                ShowError(ex);
+            }
+        }
+
+        private void ShowError(Exception ex)
+        {
+            MessageBox.Show(ex.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+
+        private void btnRefresh_Click(object sender, RoutedEventArgs e)
+        {
+            var info = GetSelectedFileInfo();
+            if (info != null)
+                LoadMarkdown(info);
+        }
     }
 }

@@ -141,12 +141,20 @@ namespace Markdown.UI
                 if (File.Exists(_configFile))
                     return JsonHelper.DeserializeFromFile<KBConfig>(_configFile);
 
-                return new KBConfig() { BaseDirectory = @"D:\temp\markdown" };
+                return new KBConfig() { BaseDirectory = GetDefaultDirectory() };
                 }
             catch
             {
-                return new KBConfig() { BaseDirectory = Environment.CurrentDirectory };
+                return new KBConfig() { BaseDirectory = GetDefaultDirectory() };
             }
+        }
+
+        private string GetDefaultDirectory()
+        {
+            var dir = System.IO.Path.Combine(Environment.CurrentDirectory, "Content");
+            if (!Directory.Exists(dir))
+                Directory.CreateDirectory(dir);
+            return dir;
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -197,6 +205,51 @@ namespace Markdown.UI
             var info = GetSelectedFileInfo();
             if (info != null)
                 LoadMarkdown(info);
+        }
+
+        private void btnNew_Click(object sender, RoutedEventArgs e)
+        {
+            var newName = txtNew.Text + ".markdown";
+            var directory = GetCurrentDirectory();
+            if (Directory.GetFiles(directory).Select(f => new FileInfo(f)).Any(f => f.Name.Equals(newName, StringComparison.InvariantCultureIgnoreCase)))
+            {
+                ShowError(new ArgumentException("File already exists."));
+                return;
+            }
+            var newFile = System.IO.Path.Combine(directory, newName);
+            File.WriteAllText(newFile, "# New Markup File", Encoding.UTF8);
+
+            var directoryNode = GetCurrentDirectoryNode();
+            var node = _treeViewFactory.CreateMarkdownFile(txtNew.Text, new FileInfo(newFile), tvwEntries_Expand);
+            if (directoryNode != null)
+                directoryNode.Items.Add(node);
+            else
+                tvwEntries.Items.Add(node);
+        }
+
+        private TreeViewItem GetCurrentDirectoryNode()
+        {
+            if (tvwEntries.SelectedItem == null) return null;
+
+            var node = tvwEntries.SelectedItem as TreeViewItem;
+            if (node.Tag == null)
+                return null;
+            else if (node.Tag is FileInfo)
+                return node.Parent as TreeViewItem;
+            else if (node.Tag is DirectoryInfo)
+                return node;
+            return null;
+        }
+
+        private string GetCurrentDirectory()
+        {
+            //Get current directory from tree
+            var currentDirectory = string.Empty;
+            var directoryNode = GetCurrentDirectoryNode();
+            if (directoryNode != null)
+                currentDirectory = ((DirectoryInfo)directoryNode.Tag).FullName;
+
+            return string.IsNullOrWhiteSpace(currentDirectory) ? _config.BaseDirectory : currentDirectory;
         }
     }
 }

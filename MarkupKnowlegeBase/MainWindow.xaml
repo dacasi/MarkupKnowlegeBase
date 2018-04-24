@@ -30,11 +30,12 @@
                 <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="Black" />
             </TreeView.Resources>
         </TreeView>
-        <TextBox Height="23" Margin="68,10,10,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
+        <TextBox Name="txtSearch" Height="23" Margin="68,10,10,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
         <Label Content="Suche:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
 
         <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
-            <Button Background="Transparent" BorderThickness="0">
+            <TextBox Name="txtNew" Width="200" Height="23" Margin="16,0,0,0"></TextBox>
+            <Button Name="btnNew" Background="Transparent" BorderThickness="0" Margin="16,0,0,0" IsEnabled="{Binding ElementName=txtNew, Path=Text.Length}" Click="btnNew_Click">
                 <Image Source="Resources/new.png"  Width="32" Height="32"/>
             </Button>
             <Button Background="Transparent" Margin="16, 0, 0, 0" Name="btnEdit" BorderThickness="0" Click="btnEdit_Click">

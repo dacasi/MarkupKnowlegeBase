@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Xml;
 using System.Linq;
+using Markdig;
+using Markdig.SyntaxHighlighting;
+using System.Text.RegularExpressions;
 
 namespace Markdown.Core
 {
@@ -38,8 +41,20 @@ namespace Markdown.Core
                 WriteHead();
                 _headWritten = true;
             }
-            var markdownToHtml = new MarkdownToHtml(_settings);
-            var html = markdownToHtml.Convert(a_markDown);
+            //var markdownToHtml = new MarkdownToHtml(_settings);
+            //var html = markdownToHtml.Convert(a_markDown);
+
+            var pipeline = new MarkdownPipelineBuilder().
+                UseAdvancedExtensions().
+                UseSyntaxHighlighting().
+                Build();
+            var html = Markdig.Markdown.ToHtml(a_markDown, pipeline);
+
+            html = html.Replace("style=\"color:Black;background-color:White;\"", string.Empty);
+            html = html.Replace("style=\"color:Blue;\"", "style=\"color:CornflowerBlue;\"");
+            html = html.Replace("style=\"color:#A31515;\"", "style=\"color:DarkSalmon;\"");
+            html = Regex.Replace(html, "class=\"lang.+? editor.+?\"", "class=\"code\"");
+
             _writer.WriteRaw(html);
         }
 
@@ -92,14 +107,18 @@ namespace Markdown.Core
 		private string GenerateDefaultCSS()
         {
             var builder = new StringBuilder();
-            builder.AppendLine("code { display:inline-block; border: 1px solid #adb7bd; background-color: #1E1E1E; padding:10px;}");
+            builder.AppendLine("code { display:inline-block; border: 1px solid #adb7bd; background-color: #1E1E1E; padding:10px; margin:8px 8px 8px 8px;}");
+            builder.AppendLine("div.code { display:inline-block; border: 1px solid #adb7bd; background-color: #1E1E1E; padding:10px; margin:8px 8px 8px 8px;}");
             builder.AppendLine("body { color: #adb7bd; font-family: 'Lucida Sans', Arial, sans-serif; font-size: 16px; background-color: #1C2329; }");
             builder.AppendLine("h1 { color: #ffffff; font-family: 'Lato', sans-serif; font-size: 32px; font-weight: 300; line-height: 58px; margin: 0 0 16px; border-bottom: solid 1px #adb7bd }");
             builder.AppendLine("h2 { color: #ffffff; font-family: 'Lato', sans-serif; font-size:28px; font-weight: 300; line-height: 58px; margin: 0 0 14px; }");
             builder.AppendLine("h3 { color: #ffffff; font-family: 'Lato', sans-serif; font-size:24px; font-weight: 300; line-height: 58px; margin: 0 0 12px; }");
             builder.AppendLine("p { color: #adb7bd; font-family: 'Lucida Sans', Arial, sans-serif; font-size: 16px; line-height: 26px; margin-top: 0; margin-bottom: 0; margin-right: 0; margin-left: 10px }");
             builder.AppendLine("a { color: #fe921f; text-decoration: underline; }");
-            builder.AppendLine("a:hover { color: #ffffff }");
+            builder.AppendLine("a:hover { color: #ffffff; }");
+            builder.AppendLine("table { border: 1px solid #adb7bd; border-collapse: collapse; margin:8px 8px 8px 8px;}");
+            builder.AppendLine("td, th { border: 1px solid #adb7bd; padding: 8px;}");
+            //builder.AppendLine("tr:nth-child(even) {background-color: #f2f2f2;}");
 
             return builder.ToString();
         }

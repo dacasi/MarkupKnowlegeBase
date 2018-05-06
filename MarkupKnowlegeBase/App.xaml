@@ -12,6 +12,17 @@
             <Setter Property="Background" Value ="#1C2329"/>
             <Setter Property="Foreground" Value ="#adb7bd"/>
         </Style>
+        <Style TargetType="Menu">
+            <Setter Property="Background" Value ="#5A5B5C"/>
+            <Setter Property="Foreground" Value ="#ffffff"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+        <Style TargetType="MenuItem">
+            <Setter Property="Background" Value ="#5A5B5C"/>
+            <Setter Property="Foreground" Value ="#ffffff"/>
+            <Setter Property="BorderBrush" Value="#1C2329"/>
+            <Setter Property="BorderThickness" Value="1"/>
+        </Style>
         <Style TargetType="TextBox">
             <Setter Property="Background" Value ="#1C2329"/>
             <Setter Property="Foreground" Value ="#adb7bd"/>
@@ -21,6 +32,36 @@
         </Style>
         <Style TargetType="TreeViewItem">
             <Setter Property="Foreground" Value ="#adb7bd"/>
+        </Style>
+        <Style TargetType="Image">
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Opacity" Value="0.5" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style TargetType="Button" x:Key="buttonStyleEx">
+            <Setter Property="OverridesDefaultStyle" Value="True" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Grid Background="{TemplateBinding Background}">
+                            <ContentPresenter x:Name="MyContentPresenter" 
+                                          Content="{TemplateBinding Content}"
+                                          HorizontalAlignment="Center" 
+                                          VerticalAlignment="Center" />
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Background" Value="Transparent"/>
+                </Trigger>
+            </Style.Triggers>
         </Style>
     </Application.Resources>
 </Application>

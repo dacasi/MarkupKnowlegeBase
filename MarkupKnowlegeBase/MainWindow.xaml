@@ -12,43 +12,70 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="23"/>
             <RowDefinition Height="44"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Rectangle Grid.Row="0" Fill="Black" Grid.ColumnSpan="2" />
-        <Grid Name="grdBrowserEditor" Grid.Column="1" Grid.Row="1">
+        <Rectangle Grid.Row="0" Grid.RowSpan="2" Fill="#5A5B5C" Grid.ColumnSpan="2" />
+        <DockPanel Grid.Row="0" Grid.ColumnSpan="2">
+            <Menu DockPanel.Dock="Top" Height="24">
+                <MenuItem Header="_File">
+                    <MenuItem Header="_New Markdown File" Name="btnNew" Click="btnNew_Click">
+                        <MenuItem.Icon>
+                            <Image Source="Resources/new.png"  Width="16" Height="16"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="_Save Markdown File" Name="btnSave" Click="btnSave_Click">
+                        <MenuItem.Icon>
+                            <Image Source="Resources/save.png"  Width="16" Height="16"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="_Delete Markdown File" Name="btnDelete" Click="btnDelete_Click">
+                        <MenuItem.Icon>
+                            <Image Source="Resources/delete.png"  Width="16" Height="16"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <Separator />
+                    <MenuItem Header="New _Folder" Name="btnNewFolder" Click="btnNewFolder_Click">
+                        <MenuItem.Icon>
+                            <Image Source="Resources/folder_48x48.png"  Width="16" Height="16"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="Delete Folder" Name="btnDeleteFolder" Click="btnDeleteFolder_Click">
+                        <MenuItem.Icon>
+                            <Image Source="Resources/delete.png"  Width="16" Height="16"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <Separator />
+                    <MenuItem Header="_Exit" Name="btnExit" Click="btnExit_Click" />
+                </MenuItem>
+            </Menu>
+        </DockPanel>
+        <Grid Name="grdBrowserEditor" Grid.Column="1" Grid.Row="2">
             <Grid.RowDefinitions>
                 <RowDefinition SharedSizeGroup="editorGroup" Height="0"/>
                 <RowDefinition SharedSizeGroup="editorGroup" Height="*"/>
             </Grid.RowDefinitions>
-            <TextBox Grid.Row="0" Name="txtEditor" TextWrapping="Wrap" AcceptsReturn="true" AcceptsTab="True" BorderThickness="0 0 0 1"/>
-            <WebBrowser Grid.Row="1" Name="webBrowser"/>
+            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                <TextBox Grid.Row="0" Name="txtEditor" TextWrapping="Wrap" AcceptsReturn="true" AcceptsTab="True" BorderThickness="0 0 0 1"/>
+            </ScrollViewer>
+            <WebBrowser Grid.Row="1" Name="webBrowser" Navigated="webBrowser_Navigated"/>
         </Grid>
-        <TreeView Name="tvwEntries" Grid.Column="0" Grid.Row="1" Margin="0,0,0,-0.333" SelectedItemChanged="tvwEntries_SelectedItemChanged" BorderThickness="0 0 1 0">
+        <TreeView Name="tvwEntries" Grid.Column="0" Grid.Row="2" Margin="0,0,0,-0.333" SelectedItemChanged="tvwEntries_SelectedItemChanged" BorderThickness="0 0 1 0">
             <TreeView.Resources>
                 <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Black" />
                 <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="Black" />
             </TreeView.Resources>
         </TreeView>
-        <TextBox Name="txtSearch" Height="23" Margin="68,10,10,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
-        <Label Content="Suche:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+        <TextBox Grid.Row="1" Name="txtSearch" Height="23" Margin="68,10,10,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
+        <Label Grid.Row="1"  Content="Search:" HorizontalAlignment="Left" Margin="10, 0, 0, 0" VerticalAlignment="Center"/>
 
-        <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
-            <TextBox Name="txtNew" Width="200" Height="23" Margin="16,0,0,0"></TextBox>
-            <Button Name="btnNew" Background="Transparent" BorderThickness="0" Margin="16,0,0,0" IsEnabled="{Binding ElementName=txtNew, Path=Text.Length}" Click="btnNew_Click">
-                <Image Source="Resources/new.png"  Width="32" Height="32"/>
-            </Button>
-            <Button Background="Transparent" Margin="16, 0, 0, 0" Name="btnEdit" BorderThickness="0" Click="btnEdit_Click">
+        <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
+            <Button Margin="16, 0, 0, 0" Name="btnEdit" Style="{StaticResource buttonStyleEx}" Click="btnEdit_Click">
                 <Image Source="Resources/edit.png"  Width="32" Height="32"/>
             </Button>
-            <Button Background="Transparent" Name="btnRefresh" BorderThickness="0" Click="btnRefresh_Click">
+            <Button Name="btnRefresh" Style="{StaticResource buttonStyleEx}" Click="btnRefresh_Click">
                 <Image Source="Resources/refresh.png"  Width="32" Height="32"/>
-            </Button>
-            <Button Background="Transparent" Name="btnSave" BorderThickness="0" Click="btnSave_Click">
-                <Image Source="Resources/save.png"  Width="32" Height="32"/>
-            </Button>
-            <Button Background="Transparent" BorderThickness="0" Margin="16, 0, 0, 0">
-                <Image Source="Resources/delete.png"  Width="32" Height="32"/>
             </Button>
         </StackPanel>
     </Grid>

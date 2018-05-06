@@ -42,6 +42,15 @@
     <ApplicationIcon>if_Apple_Books_2697663.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ColorCode, Version=1.0.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ColorCode.Portable.1.0.3\lib\portable45-net45+win8+wp8+wpa81\ColorCode.dll</HintPath>
+    </Reference>
+    <Reference Include="Markdig, Version=0.15.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Markdig.0.15.0\lib\net40\Markdig.dll</HintPath>
+    </Reference>
+    <Reference Include="Markdig.SyntaxHighlighting, Version=1.1.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Markdig.SyntaxHighlighting.1.1.5\lib\portable45-net45+win8+wp8+wpa81\Markdig.SyntaxHighlighting.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -66,7 +75,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="FrmName.xaml.cs">
+      <DependentUpon>FrmName.xaml</DependentUpon>
+    </Compile>
     <Compile Include="TreeViewItemFactory.cs" />
+    <Page Include="FrmName.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -147,5 +163,11 @@
   <ItemGroup>
     <Resource Include="if_Apple_Books_2697663.ico" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="LiteHtmlLib.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -7,4 +7,9 @@
     <Authors>Michael Casagranda</Authors>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Markdig" Version="0.15.0" />
+    <PackageReference Include="Markdig.SyntaxHighlighting" Version="1.1.5" />
+  </ItemGroup>
+
 </Project>

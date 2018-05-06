@@ -16,6 +16,7 @@ using System.Windows.Shapes;
 using Newtonsoft.Json;
 using System.IO;
 using Markdown.Core;
+using System.Reflection;
 
 namespace Markdown.UI
 {
@@ -30,7 +31,6 @@ namespace Markdown.UI
         private KBRepository _repository;
         private KBConfig _config;
         private readonly TreeViewItemFactory _treeViewFactory = new TreeViewItemFactory();
-        private bool _isEditorVisible = false;
 
         public MainWindow()
         {
@@ -45,6 +45,7 @@ namespace Markdown.UI
             });
             ReloadTree();
             LoadWelcomePage();
+
         }
 
         private void LoadWelcomePage()
@@ -74,12 +75,10 @@ namespace Markdown.UI
 
         private void tvwEntries_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            var item = (TreeViewItem)e.NewValue;
-            if(item.Tag is FileInfo)
-            {
-                var info = (FileInfo)item.Tag;
+           
+            var info = GetSelectedFileInfo();
+            if(info != null)
                 LoadMarkdown(info);
-            }
         }
 
         private void LoadMarkdown(FileInfo  a_info)
@@ -174,11 +173,13 @@ namespace Markdown.UI
 
         private void ToogleEditor()
         {
-            _isEditorVisible = !_isEditorVisible;
-            if (_isEditorVisible)
+            var isEditorVisible = !(grdBrowserEditor.RowDefinitions[0].Height.Value == 0.0);
+            if (!isEditorVisible)
                 grdBrowserEditor.RowDefinitions[0].Height = new GridLength(1, GridUnitType.Star);
             else
                 grdBrowserEditor.RowDefinitions[0].Height = new GridLength(0);
+
+            btnEdit.Background = (grdBrowserEditor.RowDefinitions[0].Height.Value == 0.0) ? new SolidColorBrush(Color.FromArgb(0, 0, 0, 0)) : new SolidColorBrush(Color.FromArgb(255, 100, 100, 100));
         }
 
         private void btnSave_Click(object sender, RoutedEventArgs e)
@@ -209,22 +210,44 @@ namespace Markdown.UI
 
         private void btnNew_Click(object sender, RoutedEventArgs e)
         {
-            var newName = txtNew.Text + ".markdown";
+            var nameDialog = new FrmName(CreateNewMarkdownFile);
+            nameDialog.ShowDialog();
+        }
+
+        private void btnDelete_Click(object sender, RoutedEventArgs e)
+        {
+            var item = tvwEntries.SelectedItem as TreeViewItem;
+            if (item == null) return;
+
+            var file = GetSelectedFileInfo();
+            File.Delete(file.FullName);
+            DeleteNode(item);
+        }
+
+        private bool CreateNewMarkdownFile(string a_name)
+        {
+            if (!a_name.EndsWith(".md", StringComparison.InvariantCultureIgnoreCase) && !a_name.EndsWith(".markdown"))
+            {
+                a_name += ".md";
+            }
+
             var directory = GetCurrentDirectory();
-            if (Directory.GetFiles(directory).Select(f => new FileInfo(f)).Any(f => f.Name.Equals(newName, StringComparison.InvariantCultureIgnoreCase)))
+            if (Directory.GetFiles(directory).Select(f => new FileInfo(f)).Any(f => f.Name.Equals(a_name, StringComparison.InvariantCultureIgnoreCase)))
             {
                 ShowError(new ArgumentException("File already exists."));
-                return;
+                return false;
             }
-            var newFile = System.IO.Path.Combine(directory, newName);
+            var newFile = System.IO.Path.Combine(directory, a_name);
             File.WriteAllText(newFile, "# New Markup File", Encoding.UTF8);
 
             var directoryNode = GetCurrentDirectoryNode();
-            var node = _treeViewFactory.CreateMarkdownFile(txtNew.Text, new FileInfo(newFile), tvwEntries_Expand);
+            var node = _treeViewFactory.CreateMarkdownFile(a_name, new FileInfo(newFile), tvwEntries_Expand);
             if (directoryNode != null)
                 directoryNode.Items.Add(node);
             else
                 tvwEntries.Items.Add(node);
+
+            return true;
         }
 
         private TreeViewItem GetCurrentDirectoryNode()
@@ -250,6 +273,67 @@ namespace Markdown.UI
                 currentDirectory = ((DirectoryInfo)directoryNode.Tag).FullName;
 
             return string.IsNullOrWhiteSpace(currentDirectory) ? _config.BaseDirectory : currentDirectory;
+        }
+
+        private void webBrowser_Navigated(object sender, NavigationEventArgs e)
+        {
+            //double Zoom = 0.5;
+            //var doc = webBrowser.Document;
+            //doc.parentWindow.execScript("document.body.style.zoom=" + Zoom.ToString().Replace(",", ".") + ";");
+        }
+
+        private void btnExit_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+
+        private void btnNewFolder_Click(object sender, RoutedEventArgs e)
+        {
+            var nameDialog = new FrmName(CreateFolder);
+            nameDialog.ShowDialog();
+        }
+
+        private bool CreateFolder(string a_folderName)
+        {
+            try
+            {
+                var parentDirectory = GetCurrentDirectory();
+                var node = GetCurrentDirectoryNode();
+                if (Directory.Exists(parentDirectory))
+                {
+                    var dirInfo = new DirectoryInfo(System.IO.Path.Combine(parentDirectory, a_folderName));
+                    Directory.CreateDirectory(dirInfo.FullName);
+                    var folderNode = _treeViewFactory.CreateFolder(dirInfo.Name, dirInfo, tvwEntries_Expand, dirInfo.GetDirectories().Any());
+                    if (node == null)
+                        tvwEntries.Items.Add(folderNode);
+                    else
+                        node.Items.Add(folderNode);
+                }
+                return true;
+            }
+            catch(Exception ex)
+            {
+                ShowError(ex);
+            }
+            return false;
+        }
+
+        private void btnDeleteFolder_Click(object sender, RoutedEventArgs e)
+        {
+            var item = tvwEntries.SelectedItem as TreeViewItem;
+            if (item == null) return;
+
+            var dir = GetCurrentDirectory();
+            Directory.Delete(dir, true);
+            DeleteNode(item);
+        }
+
+        private void DeleteNode(TreeViewItem a_node)
+        {
+            if (a_node.Parent is TreeViewItem)
+                (a_node.Parent as TreeViewItem).Items.Remove(a_node);
+            else if (a_node.Parent is TreeView)
+                (a_node.Parent as TreeView).Items.Remove(a_node);
         }
     }
 }
